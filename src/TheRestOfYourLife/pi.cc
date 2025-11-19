@@ -24,8 +24,8 @@ int main() {
 
     for (int i = 0; i < sqrt_N; i++) {
         for (int j = 0; j < sqrt_N; j++) {
-            auto x = random_double(-1,1);
-            auto y = random_double(-1,1);
+            double x = random_double(-1,1);
+            double y = random_double(-1,1);
             if (x*x + y*y < 1)
                 inside_circle++;
 

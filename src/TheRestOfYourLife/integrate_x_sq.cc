@@ -27,14 +27,14 @@ double pdf(double x) {
 
 int main() {
     int N = 1;
-    auto sum = 0.0;
+    double sum = 0.0;
 
     for (int i = 0; i < N; i++) {
-        auto z = random_double();
+        double z = random_double();
         if (z == 0.0)  // Ignore zero to avoid NaNs
             continue;
 
-        auto x = icd(z);
+        double x = icd(z);
         sum += x*x / pdf(x);
     }
 

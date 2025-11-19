@@ -35,7 +35,7 @@ class bvh_node : public hittable {
 
         int axis = bbox.longest_axis();
 
-        auto comparator = (axis == 0) ? box_x_compare
+        bool (*comparator)(const shared_ptr<hittable>, const shared_ptr<hittable>) = (axis == 0) ? box_x_compare
                         : (axis == 1) ? box_y_compare
                                       : box_z_compare;
 
@@ -49,7 +49,7 @@ class bvh_node : public hittable {
         } else {
             std::sort(std::begin(objects) + start, std::begin(objects) + end, comparator);
 
-            auto mid = start + object_span/2;
+            size_t mid = start + object_span/2;
             left = make_shared<bvh_node>(objects, start, mid);
             right = make_shared<bvh_node>(objects, mid, end);
         }
@@ -75,8 +75,8 @@ class bvh_node : public hittable {
     static bool box_compare(
         const shared_ptr<hittable> a, const shared_ptr<hittable> b, int axis_index
     ) {
-        auto a_axis_interval = a->bounding_box().axis_interval(axis_index);
-        auto b_axis_interval = b->bounding_box().axis_interval(axis_index);
+        const interval& a_axis_interval = a->bounding_box().axis_interval(axis_index);
+        const interval& b_axis_interval = b->bounding_box().axis_interval(axis_index);
         return a_axis_interval.min < b_axis_interval.min;
     }
 

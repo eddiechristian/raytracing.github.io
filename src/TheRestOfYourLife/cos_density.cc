@@ -16,7 +16,7 @@
 
 
 double f(const vec3& d) {
-    auto cos_theta = d.z();
+    double cos_theta = d.z();
     return cos_theta*cos_theta*cos_theta;
 }
 
@@ -29,7 +29,7 @@ double pdf(const vec3& d) {
 int main() {
     int N = 1000000;
 
-    auto sum = 0.0;
+    double sum = 0.0;
     for (int i = 0; i < N; i++) {
         vec3 d = random_cosine_direction();
         sum += f(d) / pdf(d);
