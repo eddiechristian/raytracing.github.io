@@ -54,7 +54,7 @@ class vec3 {
 
     bool near_zero() const {
         // Return true if the vector is close to zero in all dimensions.
-        auto s = 1e-8;
+        double s = 1e-8;
         return (std::fabs(e[0]) < s) && (std::fabs(e[1]) < s) && (std::fabs(e[2]) < s);
     }
 
@@ -115,7 +115,7 @@ inline vec3 unit_vector(const vec3& v) {
 
 inline vec3 random_in_unit_disk() {
     while (true) {
-        auto p = vec3(random_double(-1,1), random_double(-1,1), 0);
+        vec3 p = vec3(random_double(-1,1), random_double(-1,1), 0);
         if (p.length_squared() < 1)
             return p;
     }
@@ -123,8 +123,8 @@ inline vec3 random_in_unit_disk() {
 
 inline vec3 random_unit_vector() {
     while (true) {
-        auto p = vec3::random(-1,1);
-        auto lensq = p.length_squared();
+        vec3 p = vec3::random(-1,1);
+        double lensq = p.length_squared();
         if (1e-160 < lensq && lensq <= 1.0)
             return p / sqrt(lensq);
     }
@@ -143,7 +143,7 @@ inline vec3 reflect(const vec3& v, const vec3& n) {
 }
 
 inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
-    auto cos_theta = std::fmin(dot(-uv, n), 1.0);
+    double cos_theta = std::fmin(dot(-uv, n), 1.0);
     vec3 r_out_perp =  etai_over_etat * (uv + cos_theta*n);
     vec3 r_out_parallel = -std::sqrt(std::fabs(1.0 - r_out_perp.length_squared())) * n;
     return r_out_perp + r_out_parallel;

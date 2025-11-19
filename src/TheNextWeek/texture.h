@@ -47,9 +47,9 @@ class checker_texture : public texture {
       : checker_texture(scale, make_shared<solid_color>(c1), make_shared<solid_color>(c2)) {}
 
     color value(double u, double v, const point3& p) const override {
-        auto xInteger = int(std::floor(inv_scale * p.x()));
-        auto yInteger = int(std::floor(inv_scale * p.y()));
-        auto zInteger = int(std::floor(inv_scale * p.z()));
+        int xInteger = int(std::floor(inv_scale * p.x()));
+        int yInteger = int(std::floor(inv_scale * p.y()));
+        int zInteger = int(std::floor(inv_scale * p.z()));
 
         bool isEven = (xInteger + yInteger + zInteger) % 2 == 0;
 
@@ -75,11 +75,11 @@ class image_texture : public texture {
         u = interval(0,1).clamp(u);
         v = 1.0 - interval(0,1).clamp(v);  // Flip V to image coordinates
 
-        auto i = int(u * image.width());
-        auto j = int(v * image.height());
-        auto pixel = image.pixel_data(i,j);
+        int i = int(u * image.width());
+        int j = int(v * image.height());
+        const unsigned char* pixel = image.pixel_data(i,j);
 
-        auto color_scale = 1.0 / 255.0;
+        double color_scale = 1.0 / 255.0;
         return color(color_scale*pixel[0], color_scale*pixel[1], color_scale*pixel[2]);
     }
 

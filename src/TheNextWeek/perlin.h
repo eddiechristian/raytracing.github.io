@@ -25,13 +25,13 @@ class perlin {
     }
 
     double noise(const point3& p) const {
-        auto u = p.x() - std::floor(p.x());
-        auto v = p.y() - std::floor(p.y());
-        auto w = p.z() - std::floor(p.z());
+        double u = p.x() - std::floor(p.x());
+        double v = p.y() - std::floor(p.y());
+        double w = p.z() - std::floor(p.z());
 
-        auto i = int(std::floor(p.x()));
-        auto j = int(std::floor(p.y()));
-        auto k = int(std::floor(p.z()));
+        int i = int(std::floor(p.x()));
+        int j = int(std::floor(p.y()));
+        int k = int(std::floor(p.z()));
         vec3 c[2][2][2];
 
         for (int di=0; di < 2; di++)
@@ -47,9 +47,9 @@ class perlin {
     }
 
     double turb(const point3& p, int depth) const {
-        auto accum = 0.0;
-        auto temp_p = p;
-        auto weight = 1.0;
+        double accum = 0.0;
+        point3 temp_p = p;
+        double weight = 1.0;
 
         for (int i = 0; i < depth; i++) {
             accum += weight * noise(temp_p);
@@ -84,10 +84,10 @@ class perlin {
     }
 
     static double perlin_interp(const vec3 c[2][2][2], double u, double v, double w) {
-        auto uu = u*u*(3-2*u);
-        auto vv = v*v*(3-2*v);
-        auto ww = w*w*(3-2*w);
-        auto accum = 0.0;
+        double uu = u*u*(3-2*u);
+        double vv = v*v*(3-2*v);
+        double ww = w*w*(3-2*w);
+        double accum = 0.0;
 
         for (int i=0; i < 2; i++)
             for (int j=0; j < 2; j++)

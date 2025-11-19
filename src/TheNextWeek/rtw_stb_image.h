@@ -34,8 +34,8 @@ class rtw_image {
         // parent, on so on, for six levels up. If the image was not loaded successfully,
         // width() and height() will return 0.
 
-        auto filename = std::string(image_filename);
-        auto imagedir = getenv("RTW_IMAGES");
+        std::string filename = std::string(image_filename);
+        const char* imagedir = getenv("RTW_IMAGES");
 
         // Hunt for the image file in some likely locations.
         if (imagedir && load(std::string(imagedir) + "/" + image_filename)) return;
@@ -63,7 +63,7 @@ class rtw_image {
         // contiguous, going left to right for the width of the image, followed by the next row
         // below, for the full height of the image.
 
-        auto n = bytes_per_pixel; // Dummy out parameter: original components per pixel
+        int n = bytes_per_pixel; // Dummy out parameter: original components per pixel
         fdata = stbi_loadf(filename.c_str(), &image_width, &image_height, &n, bytes_per_pixel);
         if (fdata == nullptr) return false;
 
@@ -120,9 +120,9 @@ class rtw_image {
         // Iterate through all pixel components, converting from [0.0, 1.0] float values to
         // unsigned [0, 255] byte values.
 
-        auto *bptr = bdata;
-        auto *fptr = fdata;
-        for (auto i=0; i < total_bytes; i++, fptr++, bptr++)
+        unsigned char *bptr = bdata;
+        float *fptr = fdata;
+        for (int i=0; i < total_bytes; i++, fptr++, bptr++)
             *bptr = float_to_byte(*fptr);
     }
 };

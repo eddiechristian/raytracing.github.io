@@ -20,7 +20,7 @@ class sphere : public hittable {
     sphere(const point3& static_center, double radius, shared_ptr<material> mat)
       : center(static_center, vec3(0,0,0)), radius(std::fmax(0,radius)), mat(mat)
     {
-        auto rvec = vec3(radius, radius, radius);
+        vec3 rvec = vec3(radius, radius, radius);
         bbox = aabb(static_center - rvec, static_center + rvec);
     }
 
@@ -29,7 +29,7 @@ class sphere : public hittable {
            shared_ptr<material> mat)
       : center(center1, center2 - center1), radius(std::fmax(0,radius)), mat(mat)
     {
-        auto rvec = vec3(radius, radius, radius);
+        vec3 rvec = vec3(radius, radius, radius);
         aabb box1(center.at(0) - rvec, center.at(0) + rvec);
         aabb box2(center.at(1) - rvec, center.at(1) + rvec);
         bbox = aabb(box1, box2);
@@ -38,18 +38,18 @@ class sphere : public hittable {
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
         point3 current_center = center.at(r.time());
         vec3 oc = current_center - r.origin();
-        auto a = r.direction().length_squared();
-        auto h = dot(r.direction(), oc);
-        auto c = oc.length_squared() - radius*radius;
+        double a = r.direction().length_squared();
+        double h = dot(r.direction(), oc);
+        double c = oc.length_squared() - radius*radius;
 
-        auto discriminant = h*h - a*c;
+        double discriminant = h*h - a*c;
         if (discriminant < 0)
             return false;
 
-        auto sqrtd = std::sqrt(discriminant);
+        double sqrtd = std::sqrt(discriminant);
 
         // Find the nearest root that lies in the acceptable range.
-        auto root = (h - sqrtd) / a;
+        double root = (h - sqrtd) / a;
         if (!ray_t.surrounds(root)) {
             root = (h + sqrtd) / a;
             if (!ray_t.surrounds(root))
@@ -82,8 +82,8 @@ class sphere : public hittable {
         //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
         //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
 
-        auto theta = std::acos(-p.y());
-        auto phi = std::atan2(-p.z(), p.x()) + pi;
+        double theta = std::acos(-p.y());
+        double phi = std::atan2(-p.z(), p.x()) + pi;
 
         u = phi / (2*pi);
         v = theta / pi;

@@ -25,12 +25,12 @@
 void bouncing_spheres() {
     hittable_list world;
 
-    auto checker = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
+    shared_ptr<texture> checker = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
     world.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
-            auto choose_mat = random_double();
+            double choose_mat = random_double();
             point3 center(a + 0.9*random_double(), 0.2, b + 0.9*random_double());
 
             if ((center - point3(4, 0.2, 0)).length() > 0.9) {
@@ -38,14 +38,14 @@ void bouncing_spheres() {
 
                 if (choose_mat < 0.8) {
                     // diffuse
-                    auto albedo = color::random() * color::random();
+                    color albedo = color::random() * color::random();
                     sphere_material = make_shared<lambertian>(albedo);
-                    auto center2 = center + vec3(0, random_double(0,.5), 0);
+                    point3 center2 = center + vec3(0, random_double(0,.5), 0);
                     world.add(make_shared<sphere>(center, center2, 0.2, sphere_material));
                 } else if (choose_mat < 0.95) {
                     // metal
-                    auto albedo = color::random(0.5, 1);
-                    auto fuzz = random_double(0, 0.5);
+                    color albedo = color::random(0.5, 1);
+                    double fuzz = random_double(0, 0.5);
                     sphere_material = make_shared<metal>(albedo, fuzz);
                     world.add(make_shared<sphere>(center, 0.2, sphere_material));
                 } else {
@@ -57,13 +57,13 @@ void bouncing_spheres() {
         }
     }
 
-    auto material1 = make_shared<dielectric>(1.5);
+    shared_ptr<material> material1 = make_shared<dielectric>(1.5);
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
 
-    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+    shared_ptr<material> material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
     world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
 
-    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
+    shared_ptr<material> material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
 
     world = hittable_list(make_shared<bvh_node>(world));
@@ -91,7 +91,7 @@ void bouncing_spheres() {
 void checkered_spheres() {
     hittable_list world;
 
-    auto checker = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
+    shared_ptr<texture> checker = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
 
     world.add(make_shared<sphere>(point3(0,-10, 0), 10, make_shared<lambertian>(checker)));
     world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker)));
@@ -116,9 +116,9 @@ void checkered_spheres() {
 
 
 void earth() {
-    auto earth_texture = make_shared<image_texture>("earthmap.jpg");
-    auto earth_surface = make_shared<lambertian>(earth_texture);
-    auto globe = make_shared<sphere>(point3(0,0,0), 2, earth_surface);
+    shared_ptr<texture> earth_texture = make_shared<image_texture>("earthmap.jpg");
+    shared_ptr<material> earth_surface = make_shared<lambertian>(earth_texture);
+    shared_ptr<hittable> globe = make_shared<sphere>(point3(0,0,0), 2, earth_surface);
 
     camera cam;
 
@@ -142,7 +142,7 @@ void earth() {
 void perlin_spheres() {
     hittable_list world;
 
-    auto pertext = make_shared<noise_texture>(4);
+    shared_ptr<texture> pertext = make_shared<noise_texture>(4);
     world.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(pertext)));
     world.add(make_shared<sphere>(point3(0,2,0), 2, make_shared<lambertian>(pertext)));
 
@@ -169,11 +169,11 @@ void quads() {
     hittable_list world;
 
     // Materials
-    auto left_red     = make_shared<lambertian>(color(1.0, 0.2, 0.2));
-    auto back_green   = make_shared<lambertian>(color(0.2, 1.0, 0.2));
-    auto right_blue   = make_shared<lambertian>(color(0.2, 0.2, 1.0));
-    auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
-    auto lower_teal   = make_shared<lambertian>(color(0.2, 0.8, 0.8));
+    shared_ptr<material> left_red     = make_shared<lambertian>(color(1.0, 0.2, 0.2));
+    shared_ptr<material> back_green   = make_shared<lambertian>(color(0.2, 1.0, 0.2));
+    shared_ptr<material> right_blue   = make_shared<lambertian>(color(0.2, 0.2, 1.0));
+    shared_ptr<material> upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
+    shared_ptr<material> lower_teal   = make_shared<lambertian>(color(0.2, 0.8, 0.8));
 
     // Quads
     world.add(make_shared<quad>(point3(-3,-2, 5), vec3(0, 0,-4), vec3(0, 4, 0), left_red));
@@ -204,11 +204,11 @@ void quads() {
 void simple_light() {
     hittable_list world;
 
-    auto pertext = make_shared<noise_texture>(4);
+    shared_ptr<texture> pertext = make_shared<noise_texture>(4);
     world.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(pertext)));
     world.add(make_shared<sphere>(point3(0,2,0), 2, make_shared<lambertian>(pertext)));
 
-    auto difflight = make_shared<diffuse_light>(color(4,4,4));
+    shared_ptr<material> difflight = make_shared<diffuse_light>(color(4,4,4));
     world.add(make_shared<sphere>(point3(0,7,0), 2, difflight));
     world.add(make_shared<quad>(point3(3,1,-2), vec3(2,0,0), vec3(0,2,0), difflight));
 
@@ -234,10 +234,10 @@ void simple_light() {
 void cornell_box() {
     hittable_list world;
 
-    auto red   = make_shared<lambertian>(color(.65, .05, .05));
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    auto green = make_shared<lambertian>(color(.12, .45, .15));
-    auto light = make_shared<diffuse_light>(color(15, 15, 15));
+    shared_ptr<material> red   = make_shared<lambertian>(color(.65, .05, .05));
+    shared_ptr<material> white = make_shared<lambertian>(color(.73, .73, .73));
+    shared_ptr<material> green = make_shared<lambertian>(color(.12, .45, .15));
+    shared_ptr<material> light = make_shared<diffuse_light>(color(15, 15, 15));
 
     world.add(make_shared<quad>(point3(555,0,0), vec3(0,555,0), vec3(0,0,555), green));
     world.add(make_shared<quad>(point3(0,0,0), vec3(0,555,0), vec3(0,0,555), red));
@@ -278,10 +278,10 @@ void cornell_box() {
 void cornell_smoke() {
     hittable_list world;
 
-    auto red   = make_shared<lambertian>(color(.65, .05, .05));
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    auto green = make_shared<lambertian>(color(.12, .45, .15));
-    auto light = make_shared<diffuse_light>(color(7, 7, 7));
+    shared_ptr<material> red   = make_shared<lambertian>(color(.65, .05, .05));
+    shared_ptr<material> white = make_shared<lambertian>(color(.73, .73, .73));
+    shared_ptr<material> green = make_shared<lambertian>(color(.12, .45, .15));
+    shared_ptr<material> light = make_shared<diffuse_light>(color(7, 7, 7));
 
     world.add(make_shared<quad>(point3(555,0,0), vec3(0,555,0), vec3(0,0,555), green));
     world.add(make_shared<quad>(point3(0,0,0), vec3(0,555,0), vec3(0,0,555), red));
@@ -322,18 +322,18 @@ void cornell_smoke() {
 
 void final_scene(int image_width, int samples_per_pixel, int max_depth) {
     hittable_list boxes1;
-    auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+    shared_ptr<material> ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 
     int boxes_per_side = 20;
     for (int i = 0; i < boxes_per_side; i++) {
         for (int j = 0; j < boxes_per_side; j++) {
-            auto w = 100.0;
-            auto x0 = -1000.0 + i*w;
-            auto z0 = -1000.0 + j*w;
-            auto y0 = 0.0;
-            auto x1 = x0 + w;
-            auto y1 = random_double(1,101);
-            auto z1 = z0 + w;
+            double w = 100.0;
+            double x0 = -1000.0 + i*w;
+            double z0 = -1000.0 + j*w;
+            double y0 = 0.0;
+            double x1 = x0 + w;
+            double y1 = random_double(1,101);
+            double z1 = z0 + w;
 
             boxes1.add(box(point3(x0,y0,z0), point3(x1,y1,z1), ground));
         }
@@ -343,12 +343,12 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth) {
 
     world.add(make_shared<bvh_node>(boxes1));
 
-    auto light = make_shared<diffuse_light>(color(7, 7, 7));
+    shared_ptr<material> light = make_shared<diffuse_light>(color(7, 7, 7));
     world.add(make_shared<quad>(point3(123,554,147), vec3(300,0,0), vec3(0,0,265), light));
 
-    auto center1 = point3(400, 400, 200);
-    auto center2 = center1 + vec3(30,0,0);
-    auto sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
+    point3 center1 = point3(400, 400, 200);
+    point3 center2 = center1 + vec3(30,0,0);
+    shared_ptr<material> sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
     world.add(make_shared<sphere>(center1, center2, 50, sphere_material));
 
     world.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
@@ -356,19 +356,19 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth) {
         point3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1.0)
     ));
 
-    auto boundary = make_shared<sphere>(point3(360,150,145), 70, make_shared<dielectric>(1.5));
+    shared_ptr<hittable> boundary = make_shared<sphere>(point3(360,150,145), 70, make_shared<dielectric>(1.5));
     world.add(boundary);
     world.add(make_shared<constant_medium>(boundary, 0.2, color(0.2, 0.4, 0.9)));
     boundary = make_shared<sphere>(point3(0,0,0), 5000, make_shared<dielectric>(1.5));
     world.add(make_shared<constant_medium>(boundary, .0001, color(1,1,1)));
 
-    auto emat = make_shared<lambertian>(make_shared<image_texture>("earthmap.jpg"));
+    shared_ptr<material> emat = make_shared<lambertian>(make_shared<image_texture>("earthmap.jpg"));
     world.add(make_shared<sphere>(point3(400,200,400), 100, emat));
-    auto pertext = make_shared<noise_texture>(0.2);
+    shared_ptr<texture> pertext = make_shared<noise_texture>(0.2);
     world.add(make_shared<sphere>(point3(220,280,300), 80, make_shared<lambertian>(pertext)));
 
     hittable_list boxes2;
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    shared_ptr<material> white = make_shared<lambertian>(color(.73, .73, .73));
     int ns = 1000;
     for (int j = 0; j < ns; j++) {
         boxes2.add(make_shared<sphere>(point3::random(0,165), 10, white));

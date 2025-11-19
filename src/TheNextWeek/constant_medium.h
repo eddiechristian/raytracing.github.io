@@ -46,9 +46,9 @@ class constant_medium : public hittable {
         if (rec1.t < 0)
             rec1.t = 0;
 
-        auto ray_length = r.direction().length();
-        auto distance_inside_boundary = (rec2.t - rec1.t) * ray_length;
-        auto hit_distance = neg_inv_density * std::log(random_double());
+        double ray_length = r.direction().length();
+        double distance_inside_boundary = (rec2.t - rec1.t) * ray_length;
+        double hit_distance = neg_inv_density * std::log(random_double());
 
         if (hit_distance > distance_inside_boundary)
             return false;

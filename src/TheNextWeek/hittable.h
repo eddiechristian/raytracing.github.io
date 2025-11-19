@@ -81,7 +81,7 @@ class translate : public hittable {
 class rotate_y : public hittable {
   public:
     rotate_y(shared_ptr<hittable> object, double angle) : object(object) {
-        auto radians = degrees_to_radians(angle);
+        double radians = degrees_to_radians(angle);
         sin_theta = std::sin(radians);
         cos_theta = std::cos(radians);
         bbox = object->bounding_box();
@@ -92,12 +92,12 @@ class rotate_y : public hittable {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
-                    auto x = i*bbox.x.max + (1-i)*bbox.x.min;
-                    auto y = j*bbox.y.max + (1-j)*bbox.y.min;
-                    auto z = k*bbox.z.max + (1-k)*bbox.z.min;
+                    double x = i*bbox.x.max + (1-i)*bbox.x.min;
+                    double y = j*bbox.y.max + (1-j)*bbox.y.min;
+                    double z = k*bbox.z.max + (1-k)*bbox.z.min;
 
-                    auto newx =  cos_theta*x + sin_theta*z;
-                    auto newz = -sin_theta*x + cos_theta*z;
+                    double newx =  cos_theta*x + sin_theta*z;
+                    double newz = -sin_theta*x + cos_theta*z;
 
                     vec3 tester(newx, y, newz);
 
@@ -116,13 +116,13 @@ class rotate_y : public hittable {
 
         // Transform the ray from world space to object space.
 
-        auto origin = point3(
+        point3 origin = point3(
             (cos_theta * r.origin().x()) - (sin_theta * r.origin().z()),
             r.origin().y(),
             (sin_theta * r.origin().x()) + (cos_theta * r.origin().z())
         );
 
-        auto direction = vec3(
+        vec3 direction = vec3(
             (cos_theta * r.direction().x()) - (sin_theta * r.direction().z()),
             r.direction().y(),
             (sin_theta * r.direction().x()) + (cos_theta * r.direction().z())
